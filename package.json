@@ -1,0 +1,22 @@
+{
+  "name": "json-schema-observability-poc",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "GSoC 2026 Qualification Task: JSON Schema Ecosystem Observability",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js",
+    "plot": "tsc && node dist/visualize.js"
+  },
+  "keywords": [
+    "json-schema"
+  ],
+  "author": "Logthm",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^5.9.3"
+  }
+}

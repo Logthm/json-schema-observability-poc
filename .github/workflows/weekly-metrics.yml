@@ -1,0 +1,44 @@
+name: Weekly Metrics Report
+
+on:
+  schedule:
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  collect-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch metrics
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run dev
+
+      - name: Generate HTML report
+        run: npm run plot
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="metrics-$(date -u +%Y%m%d-%H%M%S)"
+          TITLE="Metrics Report $(date -u +%Y-%m-%d)"
+
+          gh release create "$TAG" \
+            --title "$TITLE" \
+            --notes "Automated weekly metrics snapshot." \
+            output/metrics.latest.json \
+            output/metrics.latest.html
